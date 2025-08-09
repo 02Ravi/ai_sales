@@ -19,7 +19,7 @@ function getGenAI() {
   return _genAI;
 }
 
-// ---------- schema ----------
+
 const clientRequirementSchema = z.object({
   industry: z.string().optional(),
   location: z.string().min(1),

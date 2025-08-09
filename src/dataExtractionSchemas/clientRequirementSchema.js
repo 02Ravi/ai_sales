@@ -32,8 +32,7 @@ const ClientRequirementSchema = z.object({
 
 const extractClientRequirements = (text) => {
   try {
-    // This is a simplified extraction - in a real implementation,
-    // you'd use more sophisticated NLP or AI to parse the text
+  
     const extracted = {
       company: {},
       hiring: {

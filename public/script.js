@@ -19,10 +19,7 @@ class AISalesAgent {
         const toggleSidebarBtn = document.getElementById('toggleSidebar');
         const sidebar = document.getElementById('sidebar');
 
-        // Send message on button click
         sendButton.addEventListener('click', () => this.sendMessage());
-
-        // Send message on Enter key (but allow Shift+Enter for new lines)
         messageInput.addEventListener('keydown', (e) => {
             if (e.key === 'Enter' && !e.shiftKey) {
                 e.preventDefault();

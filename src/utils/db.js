@@ -17,7 +17,7 @@ const initializeDatabase = () => {
 };
 
 const createTables = () => {
-  // Create sessions table
+ 
   db.run(`CREATE TABLE IF NOT EXISTS sessions (
     id TEXT PRIMARY KEY,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
