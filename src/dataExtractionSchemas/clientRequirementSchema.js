@@ -4,7 +4,7 @@ const ClientRequirementSchema = z.object({
   company: z.object({
     name: z.string().optional(),
     industry: z.string().optional(),
-    size: z.string().optional(),
+    size: z.string().optional().nullable(),
     location: z.string().optional()
   }),
 
