@@ -7,6 +7,8 @@ const ClientRequirementSchema = z.object({
     size: z.string().optional(),
     location: z.string().optional()
   }),
+
+  
   
   hiring: z.object({
     roles: z.array(z.object({
