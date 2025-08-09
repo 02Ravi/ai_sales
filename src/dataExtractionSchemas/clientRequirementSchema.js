@@ -2,7 +2,7 @@ const { z } = require('zod');
 
 const ClientRequirementSchema = z.object({
   company: z.object({
-    name: z.string().optional().nullable(),
+    name: z.string().optional(),
     industry: z.string().optional(),
     size: z.string().optional(),
     location: z.string().optional()
