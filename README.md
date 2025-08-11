@@ -36,7 +36,7 @@ An intelligent AI-powered sales agent that specializes in helping businesses fin
    cp .env.example .env
    
    # Edit .env and add your OpenAI API key
-   OPENAI_API_KEY=sk-your-real-openai-api-key
+  GEMINI_API_KEY=sk-your-real-openai-api-key
    PORT=3000
    DB_PATH=./data/agent.db
    ```
@@ -248,3 +248,4 @@ If you encounter any issues:
 - [ ] Analytics dashboard
 - [ ] Email notifications
 - [ ] Advanced conversation analytics
+
