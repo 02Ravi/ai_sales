@@ -43,15 +43,12 @@ const extractClientRequirements = (text) => {
       additional: {}
     };
 
-    // Basic keyword extraction (simplified)
     const lowerText = text.toLowerCase();
     
-    // Extract company info
     if (lowerText.includes('startup')) extracted.company.industry = 'startup';
     if (lowerText.includes('fintech')) extracted.company.industry = 'fintech';
     if (lowerText.includes('mumbai')) extracted.company.location = 'Mumbai';
     
-    // Extract roles
     const roleKeywords = {
       'backend engineer': 'Backend Engineer',
       'backend developer': 'Backend Developer',
@@ -66,14 +63,13 @@ const extractClientRequirements = (text) => {
       }
     });
     
-    // Extract urgency
+  
     if (lowerText.includes('urgently') || lowerText.includes('urgent')) {
       extracted.hiring.roles.forEach(role => {
         role.urgency = 'urgent';
       });
     }
     
-    // Extract count
     const countMatch = text.match(/(\d+)\s*(backend|frontend|designer|engineer|developer)/i);
     if (countMatch) {
       const count = parseInt(countMatch[1]);

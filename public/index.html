@@ -1,93 +1,81 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Sales Agent</title>
-    <link rel="stylesheet" href="styles.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>AI Sales Agent</title>
+  <link rel="stylesheet" href="styles.css" />
+  <!-- Needed because your JS inserts <i class="fas ..."> icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body>
-    <div class="container">
-        <!-- Header -->
-        <header class="header">
-            <div class="header-content">
-                <div class="logo">
-                    <i class="fas fa-robot"></i>
-                    <h1>AI Sales Agent</h1>
-                </div>
-                <div class="status">
-                    <span class="status-dot"></span>
-                    <span class="status-text">Connected</span>
-                </div>
-            </div>
-        </header>
-
-    
-        <main class="chat-container">
-            <div class="chat-messages" id="chatMessages">
-                <!-- Welcome message -->
-                <div class="message agent-message">
-                    <div class="message-avatar">
-                        <i class="fas fa-robot"></i>
-                    </div>
-                    <div class="message-content">
-                        <div class="message-text">
-                            Hello! I'm your AI Sales Agent. I'm here to help you with your hiring and recruitment needs. 
-                            Tell me about your company and what positions you're looking to fill.
-                        </div>
-                        <div class="message-time" id="welcomeTime"></div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Input Area -->
-            <div class="chat-input-container">
-                <div class="input-wrapper">
-                    <textarea 
-                        id="messageInput" 
-                        placeholder="Tell me about your hiring needs..."
-                        rows="1"
-                    ></textarea>
-                    <button id="sendButton" class="send-button">
-                        <i class="fas fa-paper-plane"></i>
-                    </button>
-                </div>
-                <div class="input-footer">
-                    <span class="session-info">Session: <span id="sessionId">New</span></span>
-                    <button id="newSessionBtn" class="new-session-btn">
-                        <i class="fas fa-plus"></i> New Session
-                    </button>
-                </div>
-            </div>
-        </main>
-
-        <!-- Sidebar for extracted data -->
-        <aside class="sidebar" id="sidebar">
-            <div class="sidebar-header">
-                <h3>Extracted Data</h3>
-                <button id="toggleSidebar" class="toggle-sidebar">
-                    <i class="fas fa-chevron-left"></i>
-                </button>
-            </div>
-            <div class="sidebar-content" id="sidebarContent">
-                <div class="no-data">
-                    <i class="fas fa-info-circle"></i>
-                    <p>No data extracted yet</p>
-                </div>
-            </div>
-        </aside>
-    </div>
-
-    <!-- Loading overlay -->
-    <div class="loading-overlay" id="loadingOverlay">
-        <div class="loading-spinner">
-            <i class="fas fa-spinner fa-spin"></i>
-            <p>AI is thinking...</p>
+  <div class="container">
+    <!-- Header -->
+    <header class="header">
+      <div class="header-content">
+        <div class="logo">
+          <i class="fas fa-robot"></i>
+          <h1>AI Sales Agent</h1>
         </div>
-    </div>
+        <div class="status">
+          <span class="status-dot"></span>
+          <span class="status-text">Connected</span>
+        </div>
+      </div>
+    </header>
 
-    <script src="script.js"></script>
+    <!-- Chat -->
+    <main class="chat-container">
+      <div class="chat-messages" id="chatMessages">
+        <div class="message agent-message">
+          <div class="message-avatar"><i class="fas fa-robot"></i></div>
+          <div class="message-content">
+            <div class="message-text">
+              Hello! I'm your AI Sales Agent. I'm here to help you with your hiring and recruitment needs. 
+              Tell me about your company and what positions you're looking to fill.
+            </div>
+            <div class="message-time" id="welcomeTime"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="chat-input-container">
+        <div class="input-wrapper">
+          <textarea id="messageInput" placeholder="Type your message..." rows="1"></textarea>
+          <button id="sendButton" class="send-button"><i class="fas fa-paper-plane"></i></button>
+        </div>
+        <div class="input-footer">
+          <span class="session-info">Session: <span id="sessionId">New</span></span>
+          <button id="newSessionBtn" class="new-session-btn"><i class="fas fa-plus"></i> New Session</button>
+        </div>
+      </div>
+    </main>
+
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <h3>Extracted Data</h3>
+        <button id="toggleSidebar" class="toggle-sidebar" aria-label="Toggle sidebar">
+          <i class="fas fa-chevron-left"></i>
+        </button>
+      </div>
+      <div class="sidebar-content" id="sidebarContent">
+        <div class="no-data">
+          <i class="fas fa-info-circle"></i>
+          <p>No data extracted yet</p>
+        </div>
+      </div>
+    </aside>
+  </div>
+
+  <!-- Loading -->
+  <div class="loading-overlay" id="loadingOverlay">
+    <div class="loading-spinner">
+      <i class="fas fa-spinner fa-spin"></i>
+      <p>AI is thinking...</p>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
 </body>
 </html>

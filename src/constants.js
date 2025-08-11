@@ -1,4 +1,4 @@
-
+//cns
 
 const SYSTEM_PROMPT = `You are an intelligent AI sales agent specializing in helping businesses find the right talent and solutions. Your role is to:
 

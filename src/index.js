@@ -1,98 +1,95 @@
+// Prefer IPv4 on Windows/corp Wi-Fi
+require('dns').setDefaultResultOrder('ipv4first');
+
+const { Agent, setGlobalDispatcher } = require('undici');
+
+setGlobalDispatcher(new Agent({
+  connections: 10,                 
+  pipelining: 0,                   
+  connect: { timeout: 15000 },     
+  headersTimeout: 30000,         
+  bodyTimeout: 120000,            
+  keepAliveTimeout: 70_000,        
+  keepAliveMaxTimeout: 70_000,
+}));
+
+const path = require('path');
+const fs = require('fs');
+require('dotenv').config({ path: path.resolve(__dirname, '../.env') });
+
 const express = require('express');
-const dotenv = require('dotenv');
-dotenv.config();
-const chatAgentService = require('./apps/chatAgent.service');
-const { initializeDatabase } = require('./utils/db');
+const cors = require('cors');
 
+const { initializeDatabase, closeDatabase } = require('./utils/db');
+const { processMessage, getChatHistory } = require('./apps/chatAgent.service');
 
-
+// --- sanity logs for .env ---
+const ENV_PATH = path.resolve(__dirname, '../.env');
+console.log('[env] using:', ENV_PATH, 'exists:', fs.existsSync(ENV_PATH));
+console.log('[env] GEMINI_API_KEY set:', !!process.env.GEMINI_API_KEY);
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-
+// middleware
+app.use(cors());
 app.use(express.json());
-app.use(express.static('public'));
 
-// Initialize database
+// static (if you serve your frontend from here)
+app.use(express.static(path.resolve(__dirname, '../public')));
+
+// db
 initializeDatabase();
 
-// Home route (optional: requires a public/index.html if you want a front end)
-app.get('/', (req, res) => {
-  res.sendFile('index.html', { root: './public' });
+// health
+app.get('/health', (_req, res) => {
+  res.json({ ok: true, time: new Date().toISOString() });
 });
 
-// API info
-app.get('/api', (req, res) => {
-  res.json({
-    message: 'AI Sales Agent API',
-    version: '1.0.0',
-    endpoints: {
-      chat: 'POST /chat',
-      health: 'GET /health',
-    },
-  });
-});
-
-// Health check
-app.get('/health', (req, res) => {
-  res.json({ status: 'OK', timestamp: new Date().toISOString() });
-});
-
-// Chat endpoint
+// chat
 app.post('/chat', async (req, res) => {
   try {
-    const { message, sessionId } = req.body;
-
-    if (!message) {
-      return res.status(400).json({ error: 'Message is required' });
-    }
-    if (!sessionId) {
-      return res.status(400).json({ error: 'Session ID is required' });
+    const { message, sessionId } = req.body || {};
+    if (!message || !sessionId) {
+      return res.status(400).json({ success: false, error: 'message and sessionId are required' });
     }
 
-    const response = await chatAgentService.processMessage(message, sessionId);
+    // call the agent
+    const out = await processMessage(message, sessionId);
 
-    res.json({
+    // shape the response exactly as your frontend expects
+    return res.json({
       success: true,
-      response: response.message,
-      extractedData: response.extractedData,
-      sessionId,
+      response: out.message,          // <-- your UI reads data.response
+      extractedData: out.extractedData,
+      drafts: out.drafts || {},
+      sessionId
     });
-
-  } catch (error) {
-    console.error('Chat error:', error);
-    res.status(500).json({
-      error: 'Internal server error',
-      message: error.message,
-    });
+  } catch (err) {
+    console.error('POST /chat error:', err);
+    return res.status(500).json({ success: false, error: 'internal_error' });
   }
 });
 
-// Get chat history for a session
-app.get('/chat/:sessionId', async (req, res) => {
+// history (optional)
+app.get('/history/:sessionId', async (req, res) => {
   try {
-    const { sessionId } = req.params;
-    const history = await chatAgentService.getChatHistory(sessionId);
-
-    res.json({
-      success: true,
-      sessionId,
-      history,
-    });
-
-  } catch (error) {
-    console.error('Get history error:', error);
-    res.status(500).json({
-      error: 'Internal server error',
-      message: error.message,
-    });
+    const rows = await getChatHistory(req.params.sessionId);
+    res.json({ success: true, messages: rows });
+  } catch (err) {
+    console.error('GET /history error:', err);
+    res.status(500).json({ success: false, error: 'internal_error' });
   }
 });
 
-// Start server
+// start
 app.listen(PORT, () => {
-  console.log(`🚀 AI Sales Agent server running on port ${PORT}`);
-  console.log(`📊 Health check: http://localhost:${PORT}/health`);
-  console.log(`💬 Chat endpoint: http://localhost:${PORT}/chat`);
+  console.log(`Server listening on http://localhost:${PORT}`);
+});
+
+// graceful shutdown
+process.on('SIGINT', () => {
+  console.log('Shutting down...');
+  closeDatabase();
+  process.exit(0);
 });

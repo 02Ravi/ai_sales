@@ -30,7 +30,7 @@ const createTables = () => {
     }
   });
 
-  // Create messages table
+  
   db.run(`CREATE TABLE IF NOT EXISTS messages (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     session_id TEXT NOT NULL,
